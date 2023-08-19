@@ -30,4 +30,4 @@ app.get('/products/:pId', async (req, res) => {
   res.send(prod);
 });
 
-app.listen(8080, () => console.log('Hola'));
+app.listen(8080, () => console.log('puerto 8080'));
