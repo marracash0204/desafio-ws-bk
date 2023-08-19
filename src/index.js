@@ -43,6 +43,15 @@ class ProductManager {
     return productObj;
   };
 
+  async readProducts() {
+    try {
+        const data = await fs.readFile(complProductos, 'utf-8');
+        return JSON.parse(data);
+    } catch (err) {
+        return [];
+    }
+}
+
   async updateProduct(id, nuevoPrecio) {
     try {
       const products = await this.getProductos();
@@ -60,8 +69,7 @@ class ProductManager {
   };
 
   async getProductsById(id) {
-    const product = await fs.promises.readFile(complProductos, 'utf-8');
-    const productObj = JSON.parse(product)
+    const productObj = await this.readProducts()
     const productFind = productObj.find((prod) => prod.id === id)
     await fs.promises.writeFile('./productoPorId.json',
       JSON.stringify(productFind, null, '\t'))
@@ -76,17 +84,6 @@ class ProductManager {
       JSON.stringify(productoSinId, null, '\t')
     );
   }
-
 };
 
-const todosProductos = async () => {
-  const manager = new ProductManager();
-  await manager.addProducts('Producto 1', 'Descripción de producto 1', 120, 'Sin Imagen', 'abc12', 100);
-  await manager.addProducts('Producto 2', 'Descripción de producto 2', 400, 'Sin Imagen', 'abc13', 50);
-  await manager.addProducts('Producto 3', 'Descripción de producto 3', 325, 'Sin Imagen', 'abc14', 200);
-  await manager.addProducts('Producto 4', 'Descripción de producto 4', 250, 'Sin Imagen', 'abc15', 250);
-  await manager.updateProduct(1, 25);
-  await manager.getProductsById(2);
-  await manager.deleteProduct(3);
-};
-todosProductos()
+module.exports = ProductManager
