@@ -4,7 +4,7 @@ import path from "path";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-export const complProductos = path.join(__dirname, "../productos.json");
+export const complProductos = path.join(__dirname, "../../productos.json");
 
 export class ProductManager {
   async addProducts(title, description, price, code, stock) {
@@ -74,13 +74,13 @@ export class ProductManager {
           complProductos,
           JSON.stringify(products, null, "\t")
         );
-        return true; 
+        return true;
       } else {
-        return false; 
+        return false;
       }
     } catch (error) {
       console.log("Error al actualizar el producto:", error);
-      return false; 
+      return false;
     }
   }
 
@@ -102,17 +102,20 @@ export class ProductManager {
   }
 
   async deleteProduct(id) {
-    const productos = await this.getProductos();
-    const updatedProductos = productos.filter((producto) => producto.id !== id);
 
-    if (updatedProductos.length === productos.length) {
+    const productos = await this.getProductos();
+
+    const idxToDelete = productos.findIndex((producto) => producto.id == id);
+    const deleteproduct = productos.splice(idxToDelete, 1);
+
+    if (!deleteproduct) {
       return { success: false, message: "Id inexistente" };
     }
 
     try {
       await fsPromises.writeFile(
         complProductos,
-        JSON.stringify(updatedProductos, null, "\t")
+        JSON.stringify(productos, null, "\t")
       );
 
       return { success: true, message: "Producto eliminado correctamente" };

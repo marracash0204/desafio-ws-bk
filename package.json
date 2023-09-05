@@ -2,16 +2,18 @@
   "name": "desafio-3-bk",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "type": "module",
   "dependencies": {
     "express": "^4.18.2",
+    "express-handlebars": "^7.1.2",
     "methods": "^1.1.2",
     "multer": "^1.4.5-lts.1",
-    "serve-static": "^1.15.0"
+    "serve-static": "^1.15.0",
+    "socket.io": "^4.7.2"
   },
   "scripts": {
-    "start": "nodemon ./public/app.js"
+    "start": "nodemon ./src/app.js"
   },
   "keywords": [],
   "author": "",

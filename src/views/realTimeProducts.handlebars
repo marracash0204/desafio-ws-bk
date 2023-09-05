@@ -1,0 +1,83 @@
+<div>
+    <h1>Productos en tiempo real</h1>
+    <ul id="product-list">
+        {{#each products}}
+        <li> id: {{this.id}}</br>
+            -Title: {{this.title}}
+            -Description: {{this.description}}
+            -Price: {{this.price}}
+            -Code: {{this.code}}
+            -Stock: {{this.stock}}</li>
+        {{/each}}
+    </ul>
+</div>
+<div>
+    <form id="delete-product-form" action="">
+        <h2>¿Desea eliminar un producto?</h2>
+        <input type="text" id="id-remove-prod" name="id-remove-prod" placeholder="Ingrese id a eliminar" required>
+        <button id="removeProductButton" type="submit">Eliminar Producto</button>
+        <hr><br>
+    </form>
+
+    <h2>¿Desea agregar un producto?</h2>
+    <form id="add-product-form" action="">
+        <input type="text" name="title" id="product-title" placeholder="Titulo del producto" required>
+        <input type="number" name="price" id="product-price" placeholder="Precio del producto" required>
+        <input type="text" name="description" id="product-description" placeholder="Descripcion corta del producto"
+            required>
+        <input type="text" name="code" id="product-code" placeholder="Código del producto" required>
+        <input type="number" name="stock" id="product-stock" placeholder="Stock del producto" required>
+        <button type="submit">Agregar Producto</button>
+    </form>
+</div>
+
+<script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+<script>
+    const socket = io();
+
+    const addProductForm = document.getElementById("add-product-form");
+    addProductForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const productTitle = document.getElementById("product-title").value;
+        const productPrice = document.getElementById("product-price").value;
+        const productDescription = document.getElementById(
+            "product-description"
+        ).value;
+        const productCode = document.getElementById("product-code").value;
+        const productStock = document.getElementById("product-stock").value;
+
+        socket.emit("addProduct", {
+            title: productTitle,
+            price: productPrice,
+            description: productDescription,
+            code: productCode,
+            stock: productStock,
+        });
+
+        document.getElementById("product-title").value = "";
+        document.getElementById("product-price").value = "";
+        document.getElementById("product-description").value = "";
+        document.getElementById("product-code").value = "";
+        document.getElementById("product-stock").value = "";
+    });
+
+
+    const deleteProductForm = document.getElementById("delete-product-form");
+    deleteProductForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const idProduct = document.getElementById("id-remove-prod").value;
+        socket.emit("productDeleted", idProduct);
+        document.getElementById("id-remove-prod").value = "";
+    });
+
+    socket.on("productosActualizados", (productosActualizados) => {
+        const productList = document.getElementById("product-list");
+        productList.innerHTML = "";
+        productosActualizados.forEach((product) => {
+            const listItem = document.createElement("li");
+            listItem.textContent = `ID: ${product.id}, Title: ${product.title}, Price: ${product.price}, Description: ${product.description}, Code: ${product.code}, Stock: ${product.stock}`;
+            productList.appendChild(listItem);
+        });
+    });
+
+</script>

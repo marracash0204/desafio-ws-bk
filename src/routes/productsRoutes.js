@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { ProductManager } from "../public/index.js";
+import { ProductManager } from "../fileManager/productsManager.js";
 const productManager = new ProductManager();
 
 const productsRouter = Router();
@@ -38,29 +38,35 @@ productsRouter.post("/", async (req, res) => {
 });
 
 productsRouter.put("/:pId", async (req, res) => {
-    const idprod = parseInt(req.params.pId);
-    const { title, description, price, code, stock } = req.body;
-    
-    const productUpdated = await productManager.updateProduct(idprod, title, description, price, code, stock);
-    
-    if (productUpdated) {
-        res.status(200).send("Producto actualizado exitosamente.");
-    } else {
-        res.status(404).send("No se encontró ningún producto con el ID proporcionado.");
-    }
+  const idprod = parseInt(req.params.pId);
+  const { title, description, price, code, stock } = req.body;
+
+  const productUpdated = await productManager.updateProduct(
+    idprod,
+    title,
+    description,
+    price,
+    code,
+    stock
+  );
+
+  if (productUpdated) {
+    res.status(200).send("Producto actualizado exitosamente.");
+  } else {
+    res
+      .status(404)
+      .send("No se encontró ningún producto con el ID proporcionado.");
+  }
 });
 productsRouter.delete("/:pId", async (req, res) => {
-    const idProd = parseInt(req.params.pId);
-    const deleteProd = await productManager.deleteProduct(idProd);
-    
-    if (deleteProd.success) {
-        res.status(200).send(deleteProd.message);
-    } else {
-        res.status(404).send(deleteProd.message);
-    }
+  const idProd = parseInt(req.params.pId);
+  const deleteProd = await productManager.deleteProduct(idProd);
+
+  if (deleteProd.success) {
+    res.status(200).send(deleteProd.message);
+  } else {
+    res.status(404).send(deleteProd.message);
+  }
 });
-
-
-
 
 export default productsRouter;
