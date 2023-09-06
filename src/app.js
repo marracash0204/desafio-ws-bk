@@ -18,7 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 app.engine("handlebars", handlebars.engine());
 app.set("views", "./src/views");
 app.set("view engine", "handlebars");
-app.use(express.static("../public/js"));
+app.use(express.static("./src/public"));
 
 app.use("/api/products", productsRouter, (req, res) => res.send());
 app.use("/api/carts", cartRouter, (req, res) => res.send());
